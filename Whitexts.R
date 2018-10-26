@@ -15,7 +15,7 @@ White <- function(x, methode = "sampling", Sy = 0.1, forplot=FALSE) {
     ## period.apply(x,,mean)
     fourhour.idx <- endpoints(diff.x, on = "hours", k = 4)
     slope <- period.apply(diff.x, fourhour.idx, mean)
-    valid.idx <- seq(2, length(slope), by = 6)
+    valid.idx <- seq(1, length(slope), by = 6)
     slope <- slope[valid.idx]
     slope.end <- as.numeric(coredata(slope)*48)
     slope.end <- slope.end[-length(slope.end)]
