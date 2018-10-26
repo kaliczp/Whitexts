@@ -1,11 +1,13 @@
 White <- function(x, methode = "sampling") {
+    require(xts)
     ## Idősor mintavételezés (fél óra) vagy simítás
     if(methode == "sampling")
     {
-        smoothx <- 
+        halfhour.idx <- endpoints(x, on = "minutes", k = 30)
+        smooth.x <- period.apply(x, halfhour.idx, mean)
     }
     ## Idősor differenciálás
-    diff.x <- diff.xts(smoothx)
+    diff.x <- diff.xts(smooth.x)
     ## 1) 0-4 a differenciált idősor átlaga
     ## period.apply(x,,mean)
     ## 2) Az eredeti idősor 0:00 különbsége.
