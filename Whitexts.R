@@ -1,4 +1,4 @@
-White <- function(x, methode = "sampling", Sy = 0.1, forplot=FALSE) {
+White <- function(x, methode = "sampling", Sy = 0.1) {
     require(xts)
     ## Idősor mintavételezés (fél óra) vagy simítás
     if(methode == "sampling")
@@ -30,10 +30,8 @@ White <- function(x, methode = "sampling", Sy = 0.1, forplot=FALSE) {
     ## 4) Összeadni időlépés mennyi változik? idő szerint?
     top.slope <- daily.at.place + slope.end
     ## 5) Sy elődnél lesz Sy=0.1/2 Meyboom a pórustér 50 % ürül csak le!
-    if(forplot) {
-        return(list(x, values.at.midnight, top.slope, daily.at.place))
-    } else {
-        ## mm konverzió
-        return((top.slope - values.at.midnight)*Sy*1000/2)
-    }
+    ## mm konverzió
+    ET <- (top.slope - values.at.midnight)*Sy*1000/2
+    colnames(ET) <- "CalculatedET"
+    merge.xts(daily.at.place,values.at.midnight,top.slope,ET)
 }
