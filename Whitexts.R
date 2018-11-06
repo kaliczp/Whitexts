@@ -33,6 +33,7 @@ White <- function(x, methode = "sampling", Sy = 0.1) {
     ## mm konverzió
     ET <- (top.slope - values.at.midnight)*Sy*1000/2
     colnames(ET) <- "CalculatedET"
+    ET <- round(ET,4)
     list(ori.gw = x, results = merge.xts(daily.at.place,values.at.midnight,top.slope,ET))
 }
 
@@ -43,9 +44,21 @@ plot.White <- function(x){
     white.line <- c(plot.top, x$results$values.at.midnight)
     maxline <- max(white.line, na.rm=TRUE)
     mindata <- min(x$ori.gw)
+    par(las=1, mar=c(3.1,4.1,.5,.5))
     plot(index(x$ori.gw),
          coredata(x$ori.gw),
-         type="l",xaxs="i",ylim=c(mindata,maxline),
-         ylab="GW depth [m]")
-    lines(index(white.line),coredata(white.line), col="grey")
+         xaxs="i",ylim=c(mindata,maxline),
+         ylab="h [m]", xlab="", xaxt="n", type="n")
+    lines(index(x$ori.gw),
+         coredata(x$ori.gw))
+    ts.start <- trunc(start(plot.top), unit="months")
+    ts.dayend <- end(plot.top)
+    ts.end <- trunc(ts.dayend, unit="months")
+    ts.month <- seq(ts.start,ts.end, by="months")
+    ts.day <- seq(ts.start,ts.dayend, by="days")
+    axis(1, at = ts.month, lab=F)
+    axis(1, at = ts.day, lab=F, col="lightgray", lty="dotted", tck=1)
+    axis.POSIXct(1, x = ts.month, at=ts.month + c(20,15,5)*24*60*60, format="%B", tcl=0)
+    lines(index(white.line),coredata(white.line), col="blue")
+    points(index(x$results$daily.at.place),coredata(x$results$daily.at.place))
 }
