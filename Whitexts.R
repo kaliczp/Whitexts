@@ -33,5 +33,19 @@ White <- function(x, methode = "sampling", Sy = 0.1) {
     ## mm konverzió
     ET <- (top.slope - values.at.midnight)*Sy*1000/2
     colnames(ET) <- "CalculatedET"
-    merge.xts(daily.at.place,values.at.midnight,top.slope,ET)
+    list(ori.gw = x, results = merge.xts(daily.at.place,values.at.midnight,top.slope,ET))
+}
+
+plot.White <- function(x){
+    ## Az indexet csak a létezőkhöz
+    top.idx <- index(x$results$top.slope)
+    plot.top <- xts(coredata(x$results$top.slope), top.idx-1)
+    white.line <- c(plot.top, x$results$values.at.midnight)
+    maxline <- max(white.line, na.rm=TRUE)
+    mindata <- min(x$ori.gw)
+    plot(index(x$ori.gw),
+         coredata(x$ori.gw),
+         type="l",xaxs="i",ylim=c(mindata,maxline),
+         ylab="GW depth [m]")
+    lines(index(white.line),coredata(white.line), col="grey")
 }
