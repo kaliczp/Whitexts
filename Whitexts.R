@@ -16,8 +16,8 @@ White <- function(x, methode = "sampling", Sy = 0.1, forplot=FALSE) {
     fourhour.idx <- endpoints(diff.x, on = "hours", k = 4)
     slope <- period.apply(diff.x, fourhour.idx, mean)
     valid.idx <- seq(1, length(slope), by = 6)
-    slope <- slope[valid.idx]
-    slope.end <- as.numeric(coredata(slope)*48)
+    slope.ok <- slope[valid.idx]
+    slope.end <- as.numeric(coredata(slope.ok)*48)
     slope.end <- slope.end[-length(slope.end)]
     ## 2) Az eredeti idősor 0:00 különbsége.
     ## 3) Mostani 00:00 órából van kivonva az előző merre változik a trend?
