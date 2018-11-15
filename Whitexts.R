@@ -52,6 +52,8 @@ plot.White <- function(x){
     plot.top <- xts(coredata(x$results$top.slope), top.idx-1)
     white.line <- c(plot.top, x$results$values.at.midnight)
     maxline <- max(white.line, na.rm=TRUE)
+    gwmax <- max(x$ori.gw, na.rm=TRUE)
+    maxline <- ifelse(maxline > gwmax, maxline, gwmax)
     mindata <- min(x$ori.gw)
     par(las=1, mar=c(3.1,4.1,.5,.5))
     plot(index(x$ori.gw),
