@@ -61,7 +61,7 @@ plot.White <- function(x){
          xaxs="i",ylim=c(mindata,maxline),
          ylab="h [m]", xlab="", xaxt="n", type="n")
     lines(index(x$ori.gw),
-         coredata(x$ori.gw))
+         coredata(x$ori.gw), lwd=2)
     ts.start <- trunc(start(plot.top), unit="months")
     ts.dayend <- end(plot.top)
     ts.end <- trunc(ts.dayend, unit="months")
@@ -70,6 +70,6 @@ plot.White <- function(x){
     axis(1, at = ts.month, lab=F)
     axis(1, at = ts.day, lab=F, col="lightgray", lty="dotted", tck=1)
     axis.POSIXct(1, x = ts.month, at=ts.month + c(20,15,5)*24*60*60, format="%B", tcl=0)
-    lines(index(white.line),coredata(white.line), col="blue")
+    lines(index(white.line),coredata(white.line))
     points(index(x$results$daily.at.place),coredata(x$results$daily.at.place))
 }
