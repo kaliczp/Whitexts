@@ -14,7 +14,7 @@ White <- function(x, methode = "sampling", Sy = 0.1) {
     ## 1) 0-4 a differenciált idősor átlaga
     ## period.apply(x,,mean)
     fourhour.idx <- endpoints(diff.x, on = "hours", k = 4)
-    slope <- period.apply(diff.x, fourhour.idx, mean)
+    slope <- period.apply(diff.x, fourhour.idx, median)
     valid.idx <- seq(1, length(slope), by = 6)
     ## Iránytangens órás
     slope.ok <- slope[valid.idx]*2
