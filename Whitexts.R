@@ -1,4 +1,4 @@
-White <- function(x, methode = "sampling", Sy = 0.1) {
+White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     require(xts)
     ## Idősor mintavételezés (fél óra) vagy simítás
     if(methode == "sampling")
@@ -34,8 +34,8 @@ White <- function(x, methode = "sampling", Sy = 0.1) {
     ## 4) Összeadni időlépés mennyi változik? idő szerint?
     top.slope <- daily.at.place + slope.end
     ## 5) Sy elődnél lesz Sy=0.1/2 Meyboom a pórustér 50 % ürül csak le!
-    ## mm konverzió
-    ET <- (top.slope - values.at.midnight)*Sy*1000/2
+    ## mm konverzió és a Meyboom-féle szorzó az argumentumokból.
+    ET <- (top.slope - values.at.midnight)*Sy*1000*Meyboom
     colnames(ET) <- "CalculatedET"
     ET <- round(ET,4)
     list(ori.gw = x, results = merge.xts(slope.hourly,
