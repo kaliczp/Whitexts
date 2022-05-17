@@ -7,15 +7,21 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
         halfhour.idx <- endpoints(x, on = "minutes", k = 30)
         ## A félórás ablakokban átlag
         smooth.x <- period.apply(x, halfhour.idx, mean)
-        ## 10 perc visszacsúsztatás
-        smooth.x <- xts(coredata(smooth.x), index(smooth.x) - 10*60)
+        ## 15 perc visszacsúsztatás a félórásnál
+        smooth.x <- xts(coredata(smooth.x), index(smooth.x) - 5*60)
     }
     ## Idősor differenciálás
     diff.x <- diff.xts(smooth.x)
     diff.x <- na.omit(diff.x)
+    diff.x <- c(head(smooth.x,1),diff.x)
+    diff.x[1,1] <- diff.x[2,1]
     ## 1) 0-4 a differenciált idősor átlaga
     ## Négy órás szakaszok lehatárolása
     fourhour.idx <- endpoints(diff.x, on = "hours", k = 4)
+    ## Itt el volt csúszva, ez a helyreállítás
+    fourhour.idx <- fourhour.idx + 4
+    fourhour.idx[1] <- 0
+    fourhour.idx <- fourhour.idx[-length(fourhour.idx)]
     ## A négy órás időszakokban a meredekség meghatározása mediánnal
     slope <- period.apply(diff.x, fourhour.idx, median)
     ## Minden hatodik elem kiszedése
