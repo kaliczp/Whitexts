@@ -58,7 +58,7 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
          )
 }
 
-plot.White <- function(x){
+plot.White <- function(x, daily.num = NULL){
     ## Az indexet csak a létezőkhöz
     top.idx <- index(x$results$top.slope)
     plot.top <- xts(coredata(x$results$top.slope), top.idx-1)
@@ -81,7 +81,10 @@ plot.White <- function(x){
     ts.day <- seq(ts.start,ts.dayend, by="days")
     axis(1, at = ts.month, lab=F)
     axis(1, at = ts.day, lab=F, col="lightgray", lty="dotted", tck=1)
-    axis.POSIXct(1, x = ts.month, at=ts.month + c(20,15,5)*24*60*60, format="%B", tcl=0)
+    axis.POSIXct(1, x = ts.month, at=ts.month + 15*24*60*60, format="%B", tcl=0)
+    if(!is.null(daily.num)) {
+        axis.POSIXct(1, x = ts.day, at=ts.day + 12*60*60, format="%d", tcl=0)
+    }
     lines(index(white.line),coredata(white.line))
     points(index(x$results$daily.at.place),coredata(x$results$daily.at.place))
 }
