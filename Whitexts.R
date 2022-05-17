@@ -3,7 +3,9 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     ## Idősor mintavételezés (fél óra) vagy simítás
     if(methode == "sampling")
     {
+        ## Fél órák utolsó mérései 10 min gyakoriság 20 min-nél
         halfhour.idx <- endpoints(x, on = "minutes", k = 30)
+        ## A félórás ablakokban átlag
         smooth.x <- period.apply(x, halfhour.idx, mean)
         ## 10 perc visszacsúsztatás
         smooth.x <- xts(coredata(smooth.x), index(smooth.x) - 10*60)
@@ -12,11 +14,13 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     diff.x <- diff.xts(smooth.x)
     diff.x <- na.omit(diff.x)
     ## 1) 0-4 a differenciált idősor átlaga
-    ## period.apply(x,,mean)
+    ## Négy órás szakaszok lehatárolása
     fourhour.idx <- endpoints(diff.x, on = "hours", k = 4)
+    ## A négy órás időszakokban a meredekség meghatározása mediánnal
     slope <- period.apply(diff.x, fourhour.idx, median)
+    ## Minden hatodik elem kiszedése
     valid.idx <- seq(1, length(slope), by = 6)
-    ## Iránytangens órás
+    ## Iránytangens órás, mivel félórásra simított idősorból megy, így a duplája
     slope.ok <- slope[valid.idx]*2
     slope.core <- coredata(slope.ok)
     slope.hourly <- xts(slope.core, round.POSIXt(index(slope.ok), unit="day"))
@@ -28,7 +32,9 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     day.end <- endpoints(x, on="days")
     day.begin <- day.end + 1
     values.at.midnight <- x[day.begin[-length(day.begin)]]
+    ## Az egymást követő napok különbségei
     daily.diffs <- diff.xts(values.at.midnight)
+    ## A következő nap értéke éjfélkor
     daily.at.place <- values.at.midnight - as.numeric(coredata(daily.diffs))
     daily.at.place <- na.omit(daily.at.place)
     ## 4) Összeadni időlépés mennyi változik? idő szerint?
