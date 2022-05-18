@@ -58,7 +58,7 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
          )
 }
 
-plot.White <- function(x, daily.num = NULL){
+plot.White <- function(x, daily.num = NULL, ...){
     ## Az indexet csak a létezőkhöz
     top.idx <- index(x$results$top.slope)
     plot.top <- xts(coredata(x$results$top.slope), top.idx-1)
@@ -67,11 +67,11 @@ plot.White <- function(x, daily.num = NULL){
     gwmax <- max(x$ori.gw, na.rm=TRUE)
     maxline <- ifelse(maxline > gwmax, maxline, gwmax)
     mindata <- min(x$ori.gw)
-    par(las=1, mar=c(3.1,4.1,.5,.5))
+    par(las=1, mar=c(3.1,4.1,.5,3.1))
     plot(index(x$ori.gw),
          coredata(x$ori.gw),
          xaxs="i",ylim=c(mindata,maxline),
-         ylab="h [m]", xlab="", xaxt="n", type="n")
+         ylab="h [m]", xlab="", xaxt="n", type="n", ...)
     lines(index(x$ori.gw),
          coredata(x$ori.gw), lwd=2)
     ts.start <- trunc(start(plot.top), unit="months")
