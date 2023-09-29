@@ -32,7 +32,8 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     slope.hourly <- xts(slope.core, round.POSIXt(index(slope.ok), unit="day"))
     ## Napi vonal
     slope.end <- as.numeric(slope.core * 24)
-    slope.end <- slope.end[-length(slope.end)]
+    slope.end.calc <- slope.end[-length(slope.end)]
+    slope.end.xts <- xts(slope.end, index(slope.hourly))
     ## 2) Az eredeti idősor 0:00 különbsége.
     ## 3) Mostani 00:00 órából van kivonva az előző merre változik a trend?
     day.end <- endpoints(x, on="days")
@@ -44,13 +45,15 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     daily.at.place <- values.at.midnight - as.numeric(coredata(daily.diffs))
     daily.at.place <- na.omit(daily.at.place)
     ## 4) Összeadni időlépés mennyi változik? idő szerint?
-    top.slope <- daily.at.place + slope.end
+    top.slope <- daily.at.place + slope.end.calc
     ## 5) Sy elődnél lesz Sy=0.1/2 Meyboom a pórustér 50 % ürül csak le!
     ## mm konverzió és a Meyboom-féle szorzó az argumentumokból.
     ET <- (top.slope - values.at.midnight)*Sy*1000*Meyboom
     colnames(ET) <- "CalculatedET"
     ET <- round(ET,4)
     list(ori.gw = x, results = merge.xts(slope.hourly,
+                                         slope.end.xts,
+                                         daily.diffs,
                                          daily.at.place,
                                          values.at.midnight,
                                          top.slope,
