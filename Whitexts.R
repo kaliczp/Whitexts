@@ -30,7 +30,7 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     slope.ok <- slope[valid.idx]*2
     slope.core <- coredata(slope.ok)
     slope.hourly <- xts(slope.core, round.POSIXt(index(slope.ok), unit="day"))
-    ## Napi vonal
+    ## Napi vonal 24r
     slope.end <- as.numeric(slope.core * 24)
     slope.end.calc <- slope.end[-length(slope.end)]
     slope.end.xts <- xts(slope.end, index(slope.hourly))
@@ -39,7 +39,7 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     day.end <- endpoints(x, on="days")
     day.begin <- day.end + 1
     values.at.midnight <- x[day.begin[-length(day.begin)]]
-    ## Az egymást követő napok különbségei
+    ## Az egymást követő napok különbségei (+- s)
     daily.diffs <- diff.xts(values.at.midnight)
     ## A következő nap értéke éjfélkor
     daily.at.place <- values.at.midnight - as.numeric(coredata(daily.diffs))
