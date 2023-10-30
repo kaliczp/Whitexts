@@ -51,7 +51,9 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     ET <- (top.slope - values.at.midnight)*Sy*1000*Meyboom
     colnames(ET) <- "CalculatedET"
     ET <- round(ET,4)
-    list(ori.gw = x, results = merge.xts(slope.hourly,
+    list(ori.gw = x,
+         smooth.gw = smooth.x,
+         results = merge.xts(slope.hourly,
                                          slope.end.xts,
                                          daily.diffs,
                                          daily.at.place,
@@ -77,6 +79,8 @@ plot.White <- function(x, daily.num = NULL, ...){
          ylab="h [m]", xlab="", xaxt="n", type="n", ...)
     lines(index(x$ori.gw),
          coredata(x$ori.gw), lwd=2)
+    lines(index(x$smooth.gw),
+         coredata(x$smooth.gw), col = 2)
     ts.start <- trunc(start(plot.top), unit="months")
     ts.dayend <- end(plot.top)
     ts.end <- trunc(ts.dayend, unit="months")
