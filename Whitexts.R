@@ -1,4 +1,4 @@
-White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
+White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5, median = TRUE) {
     require(xts)
     ## Idősor mintavételezés (fél óra) vagy simítás
     if(methode == "sampling")
@@ -22,8 +22,13 @@ White <- function(x, methode = "sampling", Sy = 0.1, Meyboom = 0.5) {
     fourhour.idx <- fourhour.idx + 4
     fourhour.idx[1] <- 0
     fourhour.idx <- fourhour.idx[-length(fourhour.idx)]
-    ## A négy órás időszakokban a meredekség meghatározása mediánnal
-    slope <- period.apply(diff.x, fourhour.idx, median)
+    if(median) {
+        ## A négy órás időszakokban a meredekség meghatározása mediánnal
+        slope <- period.apply(diff.x, fourhour.idx, median)
+    } else {
+        ## Ha nem medián, akkor átlag.
+        slope <- period.apply(diff.x, fourhour.idx, mean)
+    }
     ## Minden hatodik elem kiszedése
     valid.idx <- seq(1, length(slope), by = 6)
     ## Iránytangens órás, mivel félórásra simított idősorból megy, így a duplája
